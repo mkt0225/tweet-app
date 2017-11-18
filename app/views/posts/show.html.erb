@@ -1,0 +1,35 @@
+<div class="main posts-show">
+  <div class="container">
+    <div class="posts-show-item">
+      <div class="post-user-name">
+        <img src="<%= "/user_images/#{@user.image_name}" %>">
+        <%= link_to(@user.name,"/users/#{@user.id}") %>
+      </div>
+      <p><%= @post.content %></p>
+      <div class="post-time">
+        <%= @post.created_at %>
+      </div>
+      <% if Like.find_by(user_id: @current_user.id, post_id: @post.id) %>
+        <%= link_to("/likes/#{@post.id}/destroy", {method: "post"}) do %>
+          <span class="fa fa-heart like-btn-unlike"></span>
+        <% end %>
+      <% else %>
+        <%= link_to("/likes/#{@post.id}/create", {method: "post"}) do %>
+        <span class="fa fa-heart like-btn like-fa"></span>
+        <% end %>
+      <% end %>
+      <%= @likes_count %>
+
+      <% if @current_user.id == @post.user_id %>
+      <div class="post-menus">
+        <%= link_to("/posts/#{@post.id}/edit") do %>
+          <span class="fa fa-pencil-square-o fa-fw edit-delete"></span>
+        <% end %>
+        <%= link_to("/posts/#{@post.id}/destroy",{method:"post"}) do %>
+          <span class="fa fa-trash-o fa-fw edit-delete"></span>
+        <% end %>
+      </div>
+      <% end %>
+    </div>
+  </div>
+</div>

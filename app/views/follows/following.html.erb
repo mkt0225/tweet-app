@@ -1,0 +1,68 @@
+<div class="main user-show">
+  <div class="container">
+    <div class="user">
+      <img src="<%= "/user_images/#{@user.image_name}"%>" >
+      <h2><%= @user.name %></h2>
+      <p><%= @user.email %></p>
+      <p><%= @user.introduce %></p>
+      <div class="follow-container">
+      <%= link_to("/users/#{@user.id}/following") do %>
+        <p class="follow"><% if @following %>
+            フォロー中:<%= @following.count %>
+           <% else %>
+            0
+           <% end %>
+        </p>
+      <% end %>
+
+      <%= link_to("/users/#{@user.id}/followers") do %>
+        <p class="follow"><% if @followers %>フォロワー:<%= @followers.count %>
+           <% else %>
+            0
+           <% end %>
+       </p>
+      <% end %>
+    </div>
+      <% if @user.id != @current_user.id && Follow.find_by(follow_by: @current_user.id,follow_to:@user.id) == nil %>
+        <%= link_to("フォロー","/follows/#{@user.id}/create",{method: "post"}) %>
+      <% end %>
+    </div>
+
+    <ul class="user-tabs">
+      <li class="active">
+          <%= link_to("/users/#{@user.id}/following") do %>
+          <% if @following %>
+            フォロー中:<%= @following.count %>
+          <% else %>
+            フォロー中:0
+          <% end %>
+          <% end %>
+      </li>
+      <li>
+        <%= link_to("/users/#{@user.id}/followers") do %>
+        <% if @followers %>
+          フォロワー:<%= @followers.count %>
+        <% else %>
+          フォロワー:0
+        <% end %>
+        <% end %>
+      </li>
+    </ul>
+      <% if @following %>
+      <% @following.each do |f| %>
+      <% following_user = User.find_by(id: f.follow_to) %>
+        <div class="posts-index-item">
+          <div class="post-left">
+            <img src="<%= "/user_images/#{following_user.image_name}" %>">
+          </div>
+          <div class="post-right">
+            <div class="post-user-name">
+              <%= link_to(following_user.name, "/users/#{following_user.id}") %>
+            </div>
+          </div>
+        </div>
+      <% end %>
+      <% end %>
+    </div>
+  </div>
+</div>

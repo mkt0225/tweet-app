@@ -1,0 +1,63 @@
+<div class="main user-show">
+  <div class="container">
+    <div class="user">
+      <img src="<%= "/user_images/#{@user.image_name}"%>" >
+      <h2><%= @user.name %></h2>
+      <p><%= @user.email %></p>
+      <p><%= @user.introduce %></p>
+      <div class="follow-container">
+      <%= link_to("/users/#{@user.id}/following") do %>
+        <p class="follow"><% if @following %>
+            <span class="fa fa-users"></span>フォロー中: <%= @following.count %>
+           <% else %>
+             0
+           <% end %>
+        </p>
+      <% end %>
+
+      <%= link_to("/users/#{@user.id}/followers") do %>
+        <p class="follow"><% if @followers %>
+          <span class="fa fa-users"></span>フォロワー:<%= @followers.count %>
+           <% else %>
+            0
+           <% end %>
+       </p>
+      <% end %>
+    </div>
+
+      <% if @user.id != @current_user.id && Follow.find_by(follow_by: @current_user.id,follow_to:@user.id) == nil %>
+        <p><%= link_to("フォロー","/follows/#{@user.id}/create",{method: "post"}) %></p>
+      <% end %>
+      <% if Follow.find_by(follow_by: @current_user.id,follow_to:@user.id) != nil %>
+        <%= link_to("フォローを解除する","/follows/#{@user.id}/remove",{method: "post"}) %>
+      <% end %>
+
+
+      <% if @user.id == @current_user.id %>
+        <%= link_to("/users/#{@user.id}/edit") do %>
+          <span class="fa fa-pencil-square-o fa-lg"></span>
+        <% end %>
+      <% end %>
+    </div>
+
+    <ul class="user-tabs">
+      <li class="active"><%= link_to("投稿", "/users/#{@user.id}") %></li>
+      <li><%= link_to("いいね!", "/users/#{@user.id}/likes") %></li>
+    </ul>
+
+      <% @user.posts.each do |post| %>
+        <div class="posts-index-item">
+          <div class="post-left">
+            <img src="<%= "/user_images/#{post.user.image_name}" %>">
+          </div>
+          <div class="post-right">
+            <div class="post-user-name">
+              <%= link_to(post.user.name, "/users/#{post.user.id}") %>
+            </div>
+            <%= link_to(post.content, "/posts/#{post.id}") %>
+          </div>
+        </div>
+      <% end %>
+    </div>
+  </div>
+</div>
